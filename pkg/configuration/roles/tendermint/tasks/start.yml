@@ -24,10 +24,10 @@
     detach: true
     volumes:
       - "{{ tendermint_host_mount_config_dir }}{{ tendermint_home }}:{{ tendermint_home }}"
-    entrypoint: ''
+    entrypoint: 'sh'
     command: |
       bash -c 'tendermint init &&
-        jq ".validators=[]" /tendermint/config/genesis.json > /tendermint/config/genesis.tmp &&
+        cat /tendermint/config/genesis.json | jq ".validators=[]"  > /tendermint/config/genesis.tmp &&
         mv /tendermint/config/genesis.tmp /tendermint/config/genesis.json && rm /tendermint/config/node_key.json &&
         for i in $( seq {{ stack_size }} );do
         tendermint gen_validator > /tendermint/config/priv_validator$i.json;
